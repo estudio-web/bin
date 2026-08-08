@@ -485,7 +485,7 @@ function schedulePublicWinnerModal(winner, winType) {
   window.setTimeout(() => {
     pendingWinnerTimers.delete(key);
     showPublicWinnerModal(winner, winType);
-  }, 15000);
+  }, 25000);
 }
 
 function winnerKey(winner, winType) {
