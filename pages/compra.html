@@ -23,7 +23,7 @@
     <div class="container flow-header">
       <div class="flow-steps">
         <div class="flow-step is-active"><span class="flow-step__dot">1</span> Elegir cartones</div>
-        <div class="flow-step"><span class="flow-step__dot">2</span> Pagar</div>
+        <div class="flow-step" id="payment-step"><span class="flow-step__dot">2</span> Pagar</div>
         <div class="flow-step"><span class="flow-step__dot">3</span> Confirmación</div>
       </div>
     </div>
@@ -41,8 +41,8 @@
       <div class="container flow-grid">
 
         <article class="paper-card form-card">
-          <h2>¿Cuántos cartones querés?</h2>
-          <p class="form-card__hint">Cada cartón es único y se genera automáticamente al confirmar tu pago.</p>
+          <h2 id="purchase-title">¿Cuántos cartones querés?</h2>
+          <p class="form-card__hint" id="purchase-hint">Cada cartón es único y se genera automáticamente al confirmar tu pago.</p>
 
           <div class="qty-stepper">
             <button type="button" id="qty-minus" aria-label="Restar cartón">−</button>
@@ -81,7 +81,7 @@
               <p class="field-error" id="dni-error"></p>
             </div>
 
-            <div class="field">
+            <div class="field" id="whatsapp-field">
               <label for="whatsapp">WhatsApp</label>
               <input type="tel" id="whatsapp" name="whatsapp" placeholder="Ej: 11 2345 6789" inputmode="tel" required />
               <p class="field-error" id="whatsapp-error"></p>
@@ -100,7 +100,7 @@
           <p class="bingo-name" id="summary-bingo-date">—</p>
 
           <div class="summary-row">
-            <span>Precio por cartón</span>
+            <span id="summary-unit-label">Precio por cartón</span>
             <strong id="summary-unit-price">$0</strong>
           </div>
           <div class="summary-row">
@@ -113,7 +113,7 @@
           </div>
 
           <div class="summary-total">
-            <span>Importe total</span>
+            <span id="summary-total-label">Importe total</span>
             <strong id="summary-total">$0</strong>
           </div>
         </aside>
