@@ -68,9 +68,13 @@ function showState(state) {
 }
 
 function getSalaUrl(purchaseId) {
-  const url = new URL("/bin/pages/sala.html", window.location.origin);
+  const url = new URL("/pages/sala.html", window.location.origin);
   url.searchParams.set("purchase", purchaseId);
   return url.toString();
+}
+
+function isFreePurchase(purchase, bingo) {
+  return purchase?.paymentMode === "free" || purchase?.source === "promotional_free" || bingo?.saleMode === "free" || Number(purchase?.amount) === 0;
 }
 
 function getSalaPurchaseId(purchase) {
@@ -302,6 +306,11 @@ async function init() {
 
   currentPurchase = purchase;
   currentBingo = bingo;
+
+  if (isFreePurchase(purchase, bingo)) {
+    window.location.replace(getSalaUrl(getSalaPurchaseId(purchase)));
+    return;
+  }
 
   renderBankData(purchase, bingo);
   setupCopyButtons();
