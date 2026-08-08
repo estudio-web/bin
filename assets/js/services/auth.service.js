@@ -11,7 +11,6 @@ import { COLLECTIONS } from "../config/constants.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signInAnonymously,
   signOut,
   onAuthStateChanged,
   updateProfile
@@ -64,14 +63,10 @@ export function onAuthChanged(callback) {
 }
 
 export async function ensurePlayerSession() {
-  if (auth.currentUser) return auth.currentUser;
-  try {
-    const credential = await signInAnonymously(auth);
-    return credential.user;
-  } catch (err) {
-    console.warn("No se pudo iniciar sesion anonima para el jugador:", err);
-    return null;
-  }
+  // Los jugadores entran por enlaces aleatorios de compra/sala.
+  // No usamos Auth anonimo para evitar depender de un proveedor de Firebase
+  // que puede estar deshabilitado en proyectos nuevos o deploys externos.
+  return null;
 }
 
 /**
