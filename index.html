@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BingoLive — Bingos online en vivo</title>
+  <meta name="description" content="Comprá tu cartón y jugá al bingo en vivo, con sorteo transparente y pago por transferencia." />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/landing.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container site-header__bar">
+      <div class="brand">
+        <span class="brand__mark">B</span>
+        <span>BingoLive</span>
+      </div>
+      <a class="btn btn-ghost" href="pages/organizador/login.html">Soy organizador</a>
+    </div>
+  </header>
+
+  <main id="app">
+    <!-- Skeleton de carga inicial -->
+    <div id="loading-state" class="container" style="padding: 80px 24px;">
+      <div class="skeleton" style="height: 46px; width: 60%; margin-bottom: 18px; border-radius: 10px;"></div>
+      <div class="skeleton" style="height: 20px; width: 40%; margin-bottom: 40px; border-radius: 8px;"></div>
+      <div class="skeleton" style="height: 260px; width: 100%; border-radius: 22px;"></div>
+    </div>
+
+    <!-- Estado sin bingo / no encontrado -->
+    <div id="empty-state" class="container empty-state" hidden>
+      <h2>No encontramos este bingo</h2>
+      <p>Verificá el enlace que te compartió el organizador o pedile uno nuevo.</p>
+    </div>
+
+    <!-- Listado público de bingos de un organizador -->
+    <section id="organizer-bingos-content" class="organizer-bingos" hidden>
+      <div class="container">
+        <div class="organizer-bingos__head">
+          <span class="badge badge-soon">Próximos bingos</span>
+          <h1 id="organizer-bingos-title">Bingos disponibles</h1>
+          <p id="organizer-bingos-copy">Elegí otro bingo del mismo organizador para comprar cartones.</p>
+        </div>
+        <div id="organizer-bingos-grid" class="organizer-bingos__grid"></div>
+      </div>
+    </section>
+
+    <!-- Contenido real del bingo -->
+    <div id="bingo-content" hidden>
+      <section class="hero">
+        <div class="container hero__grid">
+          <div>
+            <div class="hero__eyebrow">
+              <img id="hero-logo" class="hero__logo" alt="Logo del bingo" hidden />
+              <span id="status-badge" class="badge badge-soon">Próximamente</span>
+            </div>
+            <h1 id="bingo-name" class="hero__title">—</h1>
+            <p id="bingo-desc" class="hero__desc">—</p>
+
+            <div class="hero__meta">
+              <span class="meta-chip">📅 <strong id="meta-date">—</strong></span>
+              <span class="meta-chip">🕒 <strong id="meta-time">—</strong></span>
+              <span class="meta-chip">🎟️ <strong id="meta-price">—</strong> por cartón</span>
+              <span class="meta-chip">📦 <strong id="meta-stock">—</strong> disponibles</span>
+            </div>
+          </div>
+
+          <div class="hero__ball-wrap">
+            <div class="hero-ball">
+              <div class="hero-ball__inner">
+                <span class="hero-ball__label">Comienza en</span>
+                <span id="ball-countdown" class="hero-ball__value">--:--</span>
+              </div>
+            </div>
+            <div class="countdown" id="countdown-detail">
+              <div class="countdown__unit"><strong id="cd-days">00</strong><span>días</span></div>
+              <div class="countdown__unit"><strong id="cd-hours">00</strong><span>hs</span></div>
+              <div class="countdown__unit"><strong id="cd-min">00</strong><span>min</span></div>
+              <div class="countdown__unit"><strong id="cd-sec">00</strong><span>seg</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prize-ticker">
+          <div class="container">
+            <div class="prize-ticker__track" id="prize-ticker-track"><!-- chips insertados por JS --></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="purchase-section">
+        <div class="container purchase-grid">
+          <article class="paper-card info-card">
+            <h2>Sobre este bingo</h2>
+            <p id="full-desc" class="info-card__desc">—</p>
+            <div class="info-card__prizes">
+              <h3>🏆 Premios en juego</h3>
+              <p id="full-prizes">—</p>
+            </div>
+          </article>
+
+          <aside class="paper-card buy-card">
+            <div class="buy-card__price">
+              <span id="buy-price">$0</span> <span>por cartón</span>
+            </div>
+            <p class="buy-card__stock"><strong id="buy-stock">0</strong> de <span id="buy-total">0</span> cartones disponibles</p>
+            <div class="stock-bar"><div class="stock-bar__fill" id="stock-fill"></div></div>
+            <button id="btn-comprar" class="btn btn-primary btn-block" style="margin-top:22px;">
+              Comprar cartones
+            </button>
+          </aside>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© 2026 BingoLive — plataforma de bingos online</span>
+      <span>Pagos verificados manualmente por el organizador</span>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="assets/js/pages/landing.page.js"></script>
+</body>
+</html>
