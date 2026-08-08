@@ -6,7 +6,7 @@
 // =============================================================
 
 import { subscribeToBingo, getAvailableCards } from "../services/bingo.service.js";
-import { createPurchase, getPurchaseById } from "../services/purchase.service.js";
+import { createFreePurchase, createPurchase, getPurchaseById } from "../services/purchase.service.js";
 import { generateAvailableCardOptions } from "../services/card.service.js";
 import { ensurePlayerSession } from "../services/auth.service.js";
 import { formatCurrency, formatDate, formatTime } from "../utils/format.utils.js";
@@ -17,6 +17,9 @@ const els = {
   empty: document.getElementById("empty-state"),
   content: document.getElementById("flow-content"),
   btnVolver: document.getElementById("btn-volver"),
+  paymentStep: document.getElementById("payment-step"),
+  purchaseTitle: document.getElementById("purchase-title"),
+  purchaseHint: document.getElementById("purchase-hint"),
   qtyInput: document.getElementById("qty-input"),
   qtyMinus: document.getElementById("qty-minus"),
   qtyPlus: document.getElementById("qty-plus"),
@@ -32,14 +35,17 @@ const els = {
   dni: document.getElementById("dni"),
   dniError: document.getElementById("dni-error"),
   whatsapp: document.getElementById("whatsapp"),
+  whatsappField: document.getElementById("whatsapp-field"),
   whatsappError: document.getElementById("whatsapp-error"),
   form: document.getElementById("purchase-form"),
   btnContinuar: document.getElementById("btn-continuar"),
   summaryName: document.getElementById("summary-bingo-name"),
   summaryDate: document.getElementById("summary-bingo-date"),
+  summaryUnitLabel: document.getElementById("summary-unit-label"),
   summaryUnitPrice: document.getElementById("summary-unit-price"),
   summaryQty: document.getElementById("summary-qty"),
   summaryAvailable: document.getElementById("summary-available"),
+  summaryTotalLabel: document.getElementById("summary-total-label"),
   summaryTotal: document.getElementById("summary-total")
 };
 
@@ -70,11 +76,21 @@ function getAvailable() {
   return currentBingo ? getAvailableCards(currentBingo) : 0;
 }
 
-function clampQuantity() {
+function isFreeBingo() {
+  return currentBingo?.saleMode === "free" || Number(currentBingo?.cardPrice) === 0;
+}
+
+function getMaxQuantity() {
   const available = getAvailable();
+  const freeLimit = isFreeBingo() ? Math.max(1, Number(currentBingo.freeCardsPerPerson) || 1) : available;
+  return Math.max(0, Math.min(available, freeLimit));
+}
+
+function clampQuantity() {
+  const max = getMaxQuantity();
   let qty = parseInt(els.qtyInput.value, 10);
   if (Number.isNaN(qty) || qty < 1) qty = 1;
-  if (available > 0 && qty > available) qty = available;
+  if (max > 0 && qty > max) qty = max;
   els.qtyInput.value = qty;
   return qty;
 }
@@ -157,19 +173,38 @@ function renderCardPicker() {
 function renderSummary() {
   if (!currentBingo) return;
   const available = getAvailable();
+  const max = getMaxQuantity();
   const qty = clampQuantity();
   const total = qty * (Number(currentBingo.cardPrice) || 0);
+  const free = isFreeBingo();
 
   els.summaryName.textContent = currentBingo.name;
   els.summaryDate.textContent = `${formatDate(currentBingo.eventDate)} · ${formatTime(currentBingo.eventDate)}`;
-  els.summaryUnitPrice.textContent = formatCurrency(currentBingo.cardPrice);
+  els.summaryUnitLabel.textContent = free ? "Tipo de acceso" : "Precio por carton";
+  els.summaryUnitPrice.textContent = free ? "Gratis" : formatCurrency(currentBingo.cardPrice);
   els.summaryQty.textContent = qty;
   els.summaryAvailable.textContent = available;
-  els.summaryTotal.textContent = formatCurrency(total);
+  els.summaryTotalLabel.textContent = free ? "Total a pagar" : "Importe total";
+  els.summaryTotal.textContent = free ? "$0" : formatCurrency(total);
 
   els.qtyError.textContent = available === 0 ? "No quedan cartones disponibles." : "";
+  els.qtyInput.max = max || 1;
+  els.qtyMinus.disabled = qty <= 1;
+  els.qtyPlus.disabled = max <= 0 || qty >= max;
   renderCardPicker();
   els.btnContinuar.disabled = available === 0 || selectedCards.size !== qty;
+}
+
+function renderAccessMode() {
+  const free = isFreeBingo();
+  els.paymentStep.hidden = free;
+  els.whatsappField.hidden = free;
+  els.whatsapp.required = !free;
+  els.purchaseTitle.textContent = free ? "Elegi tus cartones gratuitos" : "Cuantos cartones queres?";
+  els.purchaseHint.textContent = free
+    ? `Ingresa tu nombre y DNI. El organizador permite hasta ${Math.max(1, Number(currentBingo.freeCardsPerPerson) || 1)} carton(es) gratis por persona.`
+    : "Cada carton es unico y se genera automaticamente al confirmar tu pago.";
+  els.btnContinuar.textContent = free ? "Entrar a la sala gratis ->" : "Continuar al pago ->";
 }
 
 function renderBingo(bingo) {
@@ -182,6 +217,7 @@ function renderBingo(bingo) {
     lastAvailableCount = available;
     buildCardOptions();
   }
+  renderAccessMode();
   renderSummary();
   showState("content");
 }
@@ -213,7 +249,7 @@ function validateForm() {
   }
 
   const whatsapp = normalizeWhatsapp(els.whatsapp.value);
-  if (whatsapp.length < 8 || whatsapp.length > 15) {
+  if (!isFreeBingo() && (whatsapp.length < 8 || whatsapp.length > 15)) {
     els.whatsappError.textContent = "Ingresá un WhatsApp válido.";
     valid = false;
   } else {
@@ -253,7 +289,8 @@ async function handleSubmit(event) {
 
   try {
     const player = await ensurePlayerSession();
-    const { purchaseId } = await createPurchase({
+    const createFn = isFreeBingo() ? createFreePurchase : createPurchase;
+    const { purchaseId } = await createFn({
       bingoId: currentBingo.id,
       fullName,
       dni,
@@ -265,12 +302,14 @@ async function handleSubmit(event) {
       playerUid: appendToPurchase?.playerUid || player?.uid || null
     });
 
-    window.location.href = `pago.html?purchase=${encodeURIComponent(purchaseId)}`;
+    window.location.href = isFreeBingo()
+      ? `sala.html?purchase=${encodeURIComponent(purchaseId)}`
+      : `pago.html?purchase=${encodeURIComponent(purchaseId)}`;
   } catch (err) {
     console.error(err);
     showToast(err.message || "No pudimos procesar tu reserva. Probá de nuevo.", { type: "error" });
     els.btnContinuar.disabled = false;
-    els.btnContinuar.textContent = "Continuar al pago →";
+    renderAccessMode();
   }
 }
 
@@ -309,7 +348,7 @@ function init() {
   });
 
   els.qtyPlus.addEventListener("click", () => {
-    els.qtyInput.value = (parseInt(els.qtyInput.value, 10) || 1) + 1;
+    els.qtyInput.value = Math.min(getMaxQuantity() || 1, (parseInt(els.qtyInput.value, 10) || 1) + 1);
     renderSummary();
   });
 
