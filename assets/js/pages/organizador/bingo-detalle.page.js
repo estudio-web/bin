@@ -527,7 +527,7 @@ async function handleReceiptAction(action, purchaseId) {
 
 // ---------------- Jugadores ----------------
 function getPlayerSalaUrl(purchase) {
-  const url = new URL("/pages/sala.html", window.location.origin);
+  const url = new URL("/bin/pages/sala.html", window.location.origin);
   url.searchParams.set("purchase", purchase.salaPurchaseId || purchase.parentPurchaseId || purchase.id);
   return url.toString();
 }
