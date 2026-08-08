@@ -1,0 +1,678 @@
+/* =============================================================
+   SALA DEL JUGADOR — video en vivo + cartón + marcado automático
+============================================================= */
+
+.sala-header {
+  padding: 22px 0 6px;
+}
+
+.sala-header__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sala-header h1 {
+  font-size: 1.5rem;
+}
+
+.sala-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(360px, 0.8fr);
+  gap: 24px;
+  padding: 20px 0 90px;
+  align-items: start;
+}
+
+.video-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #000;
+  box-shadow: var(--shadow-soft);
+}
+
+.video-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-text-dim);
+  font-size: 0.95rem;
+  background: var(--ink-soft);
+}
+
+.sala-actions-panel {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  border-left: 4px solid var(--gold);
+}
+
+.sala-actions-panel h2 {
+  font-size: 1rem;
+}
+
+.sala-actions-panel p {
+  color: #6b664f;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.sala-actions-panel__buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.current-ball-panel {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 22px;
+  border-left: 4px solid var(--teal);
+}
+
+.ball-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.public-log-panel {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.public-log-panel h2 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.public-audit-log {
+  display: grid;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.public-audit-item {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background: #fffdf7;
+  border: 1px solid var(--paper-dim);
+}
+
+.public-audit-item.is-warning {
+  border-color: rgba(225, 91, 77, 0.45);
+  background: rgba(225, 91, 77, 0.08);
+}
+
+.public-audit-item span {
+  font-family: var(--font-mono);
+  color: #6b664f;
+  font-size: 0.74rem;
+}
+
+.public-audit-item p,
+.public-audit-empty {
+  color: #4a4636;
+  font-size: 0.84rem;
+}
+
+.public-claim-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  padding: 18px;
+}
+
+.public-claim-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 16, 10, 0.68);
+  backdrop-filter: blur(3px);
+}
+
+.public-claim-modal__panel {
+  position: relative;
+  width: min(640px, 100%);
+  margin: min(12vh, 88px) auto 0;
+  padding: 34px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(231, 178, 76, 0.55);
+  background: var(--paper);
+  box-shadow: var(--shadow-strong);
+  text-align: center;
+}
+
+.public-claim-modal__eyebrow {
+  display: inline-flex;
+  margin-bottom: 12px;
+  color: #8a5f10;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.public-claim-modal__panel h2 {
+  color: #201c12;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1;
+}
+
+.public-claim-modal__panel p {
+  max-width: 520px;
+  margin: 14px auto 22px;
+  color: #4a4636;
+  font-size: 1rem;
+}
+
+.current-ball {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #fff8e8, var(--gold-strong) 42%, var(--gold) 68%, #a97a1f 100%);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 16px 30px -12px rgba(231, 178, 76, 0.5);
+}
+
+.current-ball__value {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1c1204;
+}
+
+.history-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-text-dim);
+  margin-bottom: 8px;
+}
+
+.history-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 90px;
+  overflow-y: auto;
+}
+
+.history-chip {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #253258;
+  border: 1px solid var(--ink-line);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #f6f7fb;
+}
+
+.history-chip.is-recent {
+  background: var(--gold);
+  color: #1c1204;
+  border-color: var(--gold);
+}
+
+/* ---------- Panel de cartones ---------- */
+.cards-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-switcher {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.card-switcher button {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--ink-line);
+  background: var(--ink-soft);
+  color: var(--ink-text-dim);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.card-switcher button.is-active {
+  background: var(--gold);
+  color: #1c1204;
+  border-color: var(--gold);
+}
+
+#cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bingo-card-visual {
+  padding: 18px;
+  background: #f7f2f2;
+  border: 1px solid #b63838;
+  cursor: pointer;
+}
+
+.bingo-card-visual.is-active-card {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(231, 178, 76, 0.24);
+}
+
+.bingo-card-shell {
+  display: block;
+}
+
+.bingo-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.bingo-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: #b71c1c;
+  color: #fff;
+  font-weight: 700;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+}
+
+.bingo-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: #b71c1c;
+  border: 2px solid #7a0f0f;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+.bingo-row {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
+
+.bingo-cell {
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  background: #b71c1c;
+  border: 1px solid #7a0f0f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #7a0f0f;
+  min-height: 40px;
+}
+
+.bingo-cell.is-number {
+  background: #fff;
+  color: #7a0f0f;
+  border: 1px solid #b71c1c;
+}
+
+.bingo-cell.is-empty {
+  background: #b71c1c;
+  border: 1px solid #7a0f0f;
+}
+
+.bingo-cell.is-marked {
+  background: #d9b3b3;
+  color: #540909;
+}
+
+.owner-info {
+  font-size: 0.82rem;
+  color: var(--ink-text-dim);
+  margin-top: 10px;
+}
+
+.claim-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.claim-btn {
+  padding: 12px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--ink-line);
+  background: var(--ink-soft);
+  color: var(--ink-text);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.claim-btn:hover {
+  border-color: var(--gold);
+}
+
+.claim-btn.is-claimed {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+  cursor: default;
+}
+
+.owner-info {
+  font-size: 0.82rem;
+  color: var(--ink-text-dim);
+  margin-top: 10px;
+}
+
+.finished-banner {
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  background: rgba(225, 91, 77, 0.14);
+  border: 1px solid rgba(225, 91, 77, 0.4);
+  color: var(--coral);
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+.waiting-banner {
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  background: rgba(231, 178, 76, 0.14);
+  border: 1px solid rgba(231, 178, 76, 0.4);
+  color: var(--gold-strong);
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 980px) {
+  .sala-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cards-panel {
+    order: -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .sala-header {
+    padding-top: 16px;
+  }
+
+  .sala-layout {
+    padding-bottom: 56px;
+    gap: 18px;
+  }
+
+  .sala-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .current-ball-panel {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    align-items: center;
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .current-ball {
+    width: 72px;
+    height: 72px;
+  }
+
+  .current-ball__value {
+    font-size: 1.25rem;
+  }
+
+  .sala-actions-panel {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .sala-actions-panel__buttons {
+    display: grid;
+    justify-content: stretch;
+  }
+
+  .sala-actions-panel__buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ball-panel-head {
+    align-items: flex-start;
+  }
+
+  .history-track {
+    max-height: 74px;
+  }
+
+  .history-chip {
+    width: 30px;
+    height: 30px;
+    font-size: 0.68rem;
+  }
+
+  .public-claim-modal {
+    padding: 10px;
+  }
+
+  .public-claim-modal__panel {
+    margin-top: 8vh;
+    padding: 24px 18px;
+  }
+
+  .bingo-grid-header span {
+    font-size: 1rem;
+  }
+  .bingo-cell {
+    min-height: 34px;
+    font-size: 0.82rem;
+  }
+
+  .bingo-card-visual {
+    padding: 12px;
+  }
+
+  .bingo-card-badge {
+    font-size: 0.78rem;
+  }
+
+  .claim-buttons {
+    grid-template-columns: 1fr;
+    position: sticky;
+    bottom: 10px;
+    z-index: 20;
+    padding: 10px;
+    margin: 0 -10px;
+    border-radius: var(--radius-md);
+    background: rgba(13, 18, 36, 0.9);
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Natural UI */
+.video-wrap {
+  background: #111;
+  border: 1px solid #dfe4dc;
+}
+
+.video-placeholder {
+  background: #eef1eb;
+  color: #64736c;
+}
+
+.sala-actions-panel {
+  border-left-color: #c9953a;
+}
+
+.current-ball-panel {
+  border-left-color: #2f6f5f;
+}
+
+.current-ball {
+  background: #fff;
+  border: 1px solid #dfe4dc;
+  box-shadow: none;
+}
+
+.current-ball__value {
+  color: #2f6f5f;
+}
+
+.history-chip {
+  background: #fff;
+  color: #24302b;
+  border-color: #d8ded4;
+}
+
+.history-chip.is-recent {
+  background: #2f6f5f;
+  color: #fff;
+  border-color: #2f6f5f;
+}
+
+.public-audit-item {
+  background: #fff;
+  border-color: #dfe4dc;
+}
+
+.public-claim-modal__panel {
+  border-color: #cfe0d8;
+}
+
+.public-claim-modal__eyebrow {
+  color: #2f6f5f;
+}
+
+.card-switcher button {
+  background: #fff;
+  color: #64736c;
+  border-color: #d8ded4;
+}
+
+.card-switcher button.is-active {
+  background: #2f6f5f;
+  color: #fff;
+  border-color: #2f6f5f;
+}
+
+.bingo-card-visual {
+  background: #fff;
+  border-color: #d9b5ad;
+}
+
+.bingo-card-visual.is-active-card {
+  border-color: #2f6f5f;
+  box-shadow: 0 0 0 3px rgba(47, 111, 95, 0.14);
+}
+
+.bingo-card-badge {
+  background: #b85b4d;
+}
+
+.bingo-grid,
+.bingo-cell.is-empty {
+  background: #b85b4d;
+}
+
+.bingo-grid {
+  border-color: #8f3f35;
+}
+
+.bingo-cell {
+  border-color: #8f3f35;
+}
+
+.bingo-cell.is-number {
+  border-color: #b85b4d;
+  color: #7e352d;
+}
+
+.bingo-cell.is-marked {
+  background: #e8d7b9;
+  color: #4c3310;
+}
+
+.owner-info {
+  color: #64736c;
+}
+
+.claim-btn {
+  background: #fff;
+  color: #24302b;
+  border-color: #cfd8d0;
+}
+
+.claim-btn:hover {
+  background: #edf3ee;
+  border-color: #8eb2a4;
+}
+
+.claim-btn.is-claimed {
+  background: #2f6f5f;
+  border-color: #2f6f5f;
+}
+
+.waiting-banner {
+  background: #fbf2df;
+  border-color: #e5c987;
+  color: #8a611c;
+}
+
+.finished-banner {
+  background: #f8e8e5;
+  border-color: #e2aaa1;
+  color: #944238;
+}
+
+@media (max-width: 520px) {
+  .claim-buttons {
+    background: rgba(244, 246, 241, 0.94);
+    border: 1px solid #dfe4dc;
+  }
+}

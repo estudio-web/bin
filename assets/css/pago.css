@@ -1,0 +1,354 @@
+/* =============================================================
+   PAGO — datos de transferencia + carga de comprobante
+============================================================= */
+
+.pay-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+  align-items: start;
+}
+
+.bank-card {
+  padding: 30px;
+}
+
+.bank-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+}
+
+.bank-card__hint {
+  color: #6b664f;
+  font-size: 0.9rem;
+  margin-bottom: 22px;
+}
+
+.bank-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--paper-dim);
+}
+
+.bank-row:last-child {
+  border-bottom: none;
+}
+
+.bank-row__label {
+  color: #6b664f;
+  font-size: 0.86rem;
+}
+
+.bank-row__value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.02rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.copy-btn {
+  border: 1px solid #d8d2bd;
+  background: #fffdf7;
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: #3a361f;
+  min-height: 34px;
+}
+
+.copy-btn:hover {
+  border-color: var(--gold);
+}
+
+.amount-highlight {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #fff6df, #fbead0);
+  border: 1px solid #ecd8a8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.amount-highlight span {
+  color: #6b530f;
+  font-size: 0.85rem;
+}
+
+.amount-highlight strong {
+  font-family: var(--font-mono);
+  font-size: 1.7rem;
+  color: #4a340d;
+}
+
+.upload-card {
+  padding: 28px;
+  position: sticky;
+  top: 96px;
+}
+
+.upload-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 4px;
+}
+
+.upload-card__hint {
+  color: #6b664f;
+  font-size: 0.88rem;
+  margin-bottom: 18px;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #3a361f;
+}
+
+.field input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #d8d2bd;
+  background: #fffdf7;
+  color: #201c12;
+}
+
+.field input:focus {
+  border-color: var(--gold);
+}
+
+.field-error {
+  color: var(--coral);
+  font-size: 0.78rem;
+  min-height: 16px;
+  margin-top: 4px;
+}
+
+.dropzone {
+  border: 2px dashed #d8d2bd;
+  border-radius: var(--radius-md);
+  padding: 22px;
+  text-align: center;
+  cursor: pointer;
+  background: #fffdf7;
+  transition: border-color 0.15s ease;
+}
+
+.dropzone:hover {
+  border-color: #b8871d;
+  background: #fff8e8;
+}
+
+.dropzone.is-dragover {
+  border-color: var(--gold);
+  background: #fff8e8;
+}
+
+.dropzone__icon {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.dropzone__text {
+  font-size: 0.88rem;
+  color: #6b664f;
+}
+
+.dropzone__filename {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #3a361f;
+  word-break: break-all;
+}
+
+.receipt-preview {
+  margin-top: 12px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid #d8d2bd;
+  max-height: 180px;
+}
+
+.receipt-preview img {
+  width: 100%;
+  object-fit: cover;
+}
+
+/* ---------- Confirmación / estado de revisión ---------- */
+.review-state {
+  text-align: center;
+  padding: 30px 10px;
+}
+
+.review-state__actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.review-state__cta,
+.review-state__copy {
+  min-width: 180px;
+}
+
+.review-state__copy {
+  border: 1px solid #d8d2bd;
+  background: #fffdf7;
+  color: #3a361f;
+  cursor: pointer;
+}
+
+.review-state__link {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  color: #6b664f;
+  word-break: break-all;
+}
+
+.review-state__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+}
+
+.review-state__icon.pending {
+  background: rgba(231, 178, 76, 0.16);
+}
+
+.review-state__icon.approved {
+  background: rgba(42, 157, 143, 0.16);
+}
+
+.review-state__icon.rejected {
+  background: rgba(225, 91, 77, 0.16);
+}
+
+.review-state h2 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.review-state p {
+  color: #6b664f;
+}
+
+@media (max-width: 900px) {
+  .pay-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .upload-card {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .bank-card,
+  .upload-card {
+    padding: 20px;
+  }
+
+  .bank-row {
+    display: grid;
+    gap: 6px;
+  }
+
+  .bank-row__value {
+    justify-content: space-between;
+  }
+
+  .amount-highlight {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .amount-highlight strong {
+    font-size: 1.45rem;
+  }
+
+  .review-state__actions {
+    display: grid;
+  }
+
+  .review-state__cta,
+  .review-state__copy {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* Natural UI */
+.copy-btn,
+.review-state__copy {
+  background: #fff;
+  border-color: #cfd8d0;
+  color: #24302b;
+}
+
+.copy-btn:hover,
+.review-state__copy:hover {
+  background: #edf3ee;
+  border-color: #8eb2a4;
+}
+
+.amount-highlight {
+  background: #edf3ee;
+  border-color: #cfe0d8;
+}
+
+.amount-highlight span {
+  color: #4d645b;
+}
+
+.amount-highlight strong {
+  color: #2f6f5f;
+}
+
+.dropzone {
+  background: #fff;
+  border-color: #cfd8d0;
+}
+
+.dropzone:hover,
+.dropzone.is-dragover {
+  background: #edf3ee;
+  border-color: #8eb2a4;
+}
+
+.review-state__icon.pending {
+  background: #fbf2df;
+}
+
+.review-state__icon.approved {
+  background: #e2f0ea;
+}
+
+.review-state__icon.rejected {
+  background: #f8e8e5;
+}
