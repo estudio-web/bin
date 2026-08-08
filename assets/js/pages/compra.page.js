@@ -198,11 +198,11 @@ function renderSummary() {
 function renderAccessMode() {
   const free = isFreeBingo();
   els.paymentStep.hidden = free;
-  els.whatsappField.hidden = free;
-  els.whatsapp.required = !free;
+  els.whatsappField.hidden = false;
+  els.whatsapp.required = true;
   els.purchaseTitle.textContent = free ? "Elegi tus cartones gratuitos" : "Cuantos cartones queres?";
   els.purchaseHint.textContent = free
-    ? `Ingresa tu nombre y DNI. El organizador permite hasta ${Math.max(1, Number(currentBingo.freeCardsPerPerson) || 1)} carton(es) gratis por persona.`
+    ? `Ingresa tu nombre, DNI y WhatsApp. El WhatsApp se pide para enviarte el acceso a la sala, tus cartones y avisos del organizador. Limite: ${Math.max(1, Number(currentBingo.freeCardsPerPerson) || 1)} carton(es) gratis por persona.`
     : "Cada carton es unico y se genera automaticamente al confirmar tu pago.";
   els.btnContinuar.textContent = free ? "Entrar a la sala gratis ->" : "Continuar al pago ->";
 }
@@ -249,7 +249,7 @@ function validateForm() {
   }
 
   const whatsapp = normalizeWhatsapp(els.whatsapp.value);
-  if (!isFreeBingo() && (whatsapp.length < 8 || whatsapp.length > 15)) {
+  if (whatsapp.length < 8 || whatsapp.length > 15) {
     els.whatsappError.textContent = "Ingresá un WhatsApp válido.";
     valid = false;
   } else {
