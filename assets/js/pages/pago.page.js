@@ -68,7 +68,7 @@ function showState(state) {
 }
 
 function getSalaUrl(purchaseId) {
-  const url = new URL("/pages/sala.html", window.location.origin);
+  const url = new URL("/bin/pages/sala.html", window.location.origin);
   url.searchParams.set("purchase", purchaseId);
   return url.toString();
 }
