@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comprar cartones — BingoLive</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/compra.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container site-header__bar">
+      <a class="brand" href="../index.html">
+        <span class="brand__mark">B</span>
+        <span>BingoLive</span>
+      </a>
+      <a class="btn btn-ghost" id="btn-volver" href="../index.html">← Volver al bingo</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container flow-header">
+      <div class="flow-steps">
+        <div class="flow-step is-active"><span class="flow-step__dot">1</span> Elegir cartones</div>
+        <div class="flow-step"><span class="flow-step__dot">2</span> Pagar</div>
+        <div class="flow-step"><span class="flow-step__dot">3</span> Confirmación</div>
+      </div>
+    </div>
+
+    <div id="loading-state" class="container" style="padding: 20px 24px 80px;">
+      <div class="skeleton" style="height: 340px; width: 100%; border-radius: 22px;"></div>
+    </div>
+
+    <div id="empty-state" class="container empty-state" hidden>
+      <h2>No pudimos encontrar este bingo</h2>
+      <p>Volvé a la landing y probá de nuevo desde el botón "Comprar".</p>
+    </div>
+
+    <section id="flow-content" class="flow-main" hidden>
+      <div class="container flow-grid">
+
+        <article class="paper-card form-card">
+          <h2>¿Cuántos cartones querés?</h2>
+          <p class="form-card__hint">Cada cartón es único y se genera automáticamente al confirmar tu pago.</p>
+
+          <div class="qty-stepper">
+            <button type="button" id="qty-minus" aria-label="Restar cartón">−</button>
+            <input type="number" id="qty-input" value="1" min="1" inputmode="numeric" />
+            <button type="button" id="qty-plus" aria-label="Sumar cartón">+</button>
+          </div>
+          <p class="field-error" id="qty-error"></p>
+
+          <section class="card-picker" aria-labelledby="card-picker-title">
+            <div class="card-picker__head">
+              <div>
+                <h3 id="card-picker-title">Elegí tus cartones</h3>
+                <p id="card-picker-help">Seleccioná los cartones disponibles que querés reservar.</p>
+              </div>
+              <span class="card-picker__counter" id="selected-cards-count">0 seleccionados</span>
+            </div>
+            <div class="card-picker__pager">
+              <button type="button" class="btn btn-ghost btn-small" id="cards-prev">Anterior</button>
+              <span id="cards-page-label">—</span>
+              <button type="button" class="btn btn-ghost btn-small" id="cards-next">Siguiente</button>
+            </div>
+            <div class="available-cards-grid" id="available-cards-grid"></div>
+            <p class="field-error" id="cards-error"></p>
+          </section>
+
+          <form id="purchase-form" class="form-grid" novalidate>
+            <div class="field">
+              <label for="full-name">Nombre completo</label>
+              <input type="text" id="full-name" name="fullName" placeholder="Ej: María Fernanda López" required />
+              <p class="field-error" id="name-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="dni">DNI</label>
+              <input type="text" id="dni" name="dni" placeholder="Ej: 30123456" inputmode="numeric" required />
+              <p class="field-error" id="dni-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="whatsapp">WhatsApp</label>
+              <input type="tel" id="whatsapp" name="whatsapp" placeholder="Ej: 11 2345 6789" inputmode="tel" required />
+              <p class="field-error" id="whatsapp-error"></p>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-block" id="btn-continuar">
+                Continuar al pago →
+              </button>
+            </div>
+          </form>
+        </article>
+
+        <aside class="paper-card summary-card">
+          <h3 id="summary-bingo-name">—</h3>
+          <p class="bingo-name" id="summary-bingo-date">—</p>
+
+          <div class="summary-row">
+            <span>Precio por cartón</span>
+            <strong id="summary-unit-price">$0</strong>
+          </div>
+          <div class="summary-row">
+            <span>Cantidad</span>
+            <strong id="summary-qty">1</strong>
+          </div>
+          <div class="summary-row">
+            <span>Disponibles</span>
+            <strong id="summary-available">0</strong>
+          </div>
+
+          <div class="summary-total">
+            <span>Importe total</span>
+            <strong id="summary-total">$0</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© 2026 BingoLive</span>
+      <span>Tus datos solo se comparten con el organizador de este bingo</span>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="../assets/js/pages/compra.page.js"></script>
+</body>
+</html>

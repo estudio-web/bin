@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagar mi cartón — BingoLive</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/compra.css" />
+  <link rel="stylesheet" href="../assets/css/pago.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container site-header__bar">
+      <a class="brand" href="../index.html">
+        <span class="brand__mark">B</span>
+        <span>BingoLive</span>
+      </a>
+      <span id="header-bingo-id" class="mono" style="color:var(--ink-text-dim); font-size:0.82rem;"></span>
+    </div>
+  </header>
+
+  <main>
+    <div class="container flow-header">
+      <div class="flow-steps">
+        <div class="flow-step is-done"><span class="flow-step__dot">✓</span> Elegir cartones</div>
+        <div class="flow-step is-active"><span class="flow-step__dot">2</span> Pagar</div>
+        <div class="flow-step"><span class="flow-step__dot">3</span> Confirmación</div>
+      </div>
+    </div>
+
+    <div id="loading-state" class="container" style="padding: 20px 24px 80px;">
+      <div class="skeleton" style="height: 340px; width: 100%; border-radius: 22px;"></div>
+    </div>
+
+    <div id="empty-state" class="container empty-state" hidden>
+      <h2>No encontramos esta compra</h2>
+      <p>Es posible que el enlace haya expirado. Volvé a la landing del bingo e intentá de nuevo.</p>
+    </div>
+
+    <!-- Formulario de pago -->
+    <section id="pay-content" class="flow-main" hidden>
+      <div class="container pay-grid">
+
+        <article class="paper-card bank-card">
+          <h2>Transferí el importe total</h2>
+          <p class="bank-card__hint">Estos son los datos enviados automáticamente por el organizador de <strong id="bank-bingo-name">—</strong>.</p>
+
+          <div class="bank-row">
+            <span class="bank-row__label">Bingo</span>
+            <span class="bank-row__value mono" id="bank-bingo-id">—</span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-row__label">Titular</span>
+            <span class="bank-row__value" id="bank-organizer">—</span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-row__label">Alias</span>
+            <span class="bank-row__value mono">
+              <span id="bank-alias">—</span>
+              <button type="button" class="copy-btn" data-copy-target="bank-alias">Copiar</button>
+            </span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-row__label">CBU</span>
+            <span class="bank-row__value mono">
+              <span id="bank-cbu">—</span>
+              <button type="button" class="copy-btn" data-copy-target="bank-cbu">Copiar</button>
+            </span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-row__label">Cantidad de cartones</span>
+            <span class="bank-row__value" id="bank-qty">—</span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-row__label">Precio por cartón</span>
+            <span class="bank-row__value" id="bank-unit-price">—</span>
+          </div>
+
+          <div class="amount-highlight">
+            <span>Importe total a transferir</span>
+            <strong id="bank-amount">$0</strong>
+          </div>
+        </article>
+
+        <aside class="paper-card upload-card">
+          <h3>Confirmá tu pago</h3>
+          <p class="upload-card__hint">Subí el comprobante y verificá tus datos. El organizador lo revisará manualmente.</p>
+
+          <form id="receipt-form" class="form-grid" novalidate>
+            <div class="field">
+              <label for="pay-name">Nombre completo</label>
+              <input type="text" id="pay-name" required />
+              <p class="field-error" id="pay-name-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="pay-dni">DNI</label>
+              <input type="text" id="pay-dni" inputmode="numeric" required />
+              <p class="field-error" id="pay-dni-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="pay-whatsapp">WhatsApp</label>
+              <input type="tel" id="pay-whatsapp" inputmode="tel" required />
+              <p class="field-error" id="pay-whatsapp-error"></p>
+            </div>
+
+            <div class="field">
+              <label>Comprobante de transferencia</label>
+              <div class="dropzone" id="dropzone">
+                <div class="dropzone__icon">📎</div>
+                <div class="dropzone__text">Arrastrá tu imagen acá o hacé clic para elegirla</div>
+                <div class="dropzone__filename" id="file-name"></div>
+              </div>
+              <input type="file" id="receipt-input" accept="image/*" hidden />
+              <div id="receipt-preview" class="receipt-preview" hidden>
+                <img id="receipt-preview-img" alt="Vista previa del comprobante" />
+              </div>
+              <p class="field-error" id="receipt-error"></p>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="btn-confirmar">
+              Confirmar pago
+            </button>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Estado de revisión / resultado -->
+    <section id="review-content" class="flow-main" hidden>
+      <div class="container" style="max-width: 560px;">
+        <article class="paper-card review-state" id="review-card">
+          <div class="review-state__icon pending" id="review-icon">⏳</div>
+          <h2 id="review-title">Comprobante recibido</h2>
+          <p id="review-text">El organizador está revisando tu pago. Esta página se actualiza sola cuando lo confirme.</p>
+          <div id="review-actions" class="review-state__actions" hidden>
+            <a class="btn btn-primary review-state__cta" id="review-cta" href="#" target="_blank" rel="noopener">Ver mi sala →</a>
+            <button type="button" class="btn review-state__copy" id="review-copy">Copiar enlace</button>
+          </div>
+          <p id="review-link" class="review-state__link" hidden></p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© 2026 BingoLive</span>
+      <span>Los pagos son verificados manualmente por cada organizador</span>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="../assets/js/pages/pago.page.js"></script>
+</body>
+</html>
