@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirigiendo - BingoLive</title>
+  <script>
+    const path = window.location.pathname.replace(/\/+$/, "");
+    const query = window.location.search || "";
+    const routes = {
+      "/organizador": "/pages/organizador/login.html",
+      "/organizador/login": "/pages/organizador/login.html",
+      "/organizador/dashboard": "/pages/organizador/dashboard.html",
+      "/organizador/crear-bingo": "/pages/organizador/crear-bingo.html",
+      "/organizador/bingo": "/pages/organizador/bingo.html",
+      "/pages/organizador": "/pages/organizador/login.html",
+      "/pages/organizador/login": "/pages/organizador/login.html",
+      "/pages/organizador/dashboard": "/pages/organizador/dashboard.html",
+      "/pages/organizador/crear-bingo": "/pages/organizador/crear-bingo.html",
+      "/pages/organizador/bingo": "/pages/organizador/bingo.html",
+      "/compra": "/pages/compra.html",
+      "/pago": "/pages/pago.html",
+      "/sala": "/pages/sala.html"
+    };
+    window.location.replace((routes[path] || "/index.html") + query);
+  </script>
+</head>
+<body>
+  Redirigiendo...
+</body>
+</html>
