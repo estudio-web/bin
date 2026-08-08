@@ -193,6 +193,12 @@
   margin-top: 4px;
 }
 
+.field-help {
+  color: #6b664f;
+  font-size: 0.78rem;
+  margin-top: 5px;
+}
+
 .card-picker {
   margin-top: 24px;
   padding-top: 22px;
