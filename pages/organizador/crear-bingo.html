@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crear bingo — Panel del organizador — BingoLive</title>
+  <link rel="stylesheet" href="../../assets/css/main.css" />
+  <link rel="stylesheet" href="../../assets/css/organizador.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container org-topbar">
+      <a class="brand" href="dashboard.html">
+        <span class="brand__mark">B</span>
+        <span>BingoLive</span>
+      </a>
+      <div class="org-topbar__user">
+        <span class="org-topbar__avatar" id="user-initial">?</span>
+        <span id="user-name">Cargando…</span>
+        <button class="btn btn-ghost" id="btn-logout">Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 32px 24px 100px; max-width: 760px;">
+    <div class="org-page-head">
+      <div>
+        <h1>Crear nuevo bingo</h1>
+        <p>Completá los datos; vas a poder editarlos después.</p>
+      </div>
+      <a class="btn btn-ghost" href="dashboard.html">← Volver</a>
+    </div>
+
+    <form id="create-form" class="paper-card" style="padding: 32px;" novalidate>
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="f-name">Nombre del bingo *</label>
+          <input type="text" id="f-name" placeholder="Ej: Bingo Solidario de Verano" required />
+          <p class="field-error" id="err-name"></p>
+        </div>
+
+        <div class="field">
+          <label for="f-description">Descripción</label>
+          <textarea id="f-description" placeholder="Contales a los jugadores de qué se trata este bingo..."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="f-prizes">Premios (uno por línea) *</label>
+          <textarea id="f-prizes" placeholder="1er premio: $150.000&#10;2do premio: Televisor 50&quot;&#10;3er premio: Canasta navideña" required></textarea>
+          <p class="field-error" id="err-prizes"></p>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-prize-terna">Premio Terna</label>
+            <input type="text" id="f-prize-terna" placeholder="Ej: $20.000" />
+          </div>
+          <div class="field">
+            <label for="f-prize-linea">Premio Línea</label>
+            <input type="text" id="f-prize-linea" placeholder="Ej: orden de compra" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-prize-bingo">Premio Bingo</label>
+            <input type="text" id="f-prize-bingo" placeholder="Ej: $150.000 o TV 50 pulgadas" />
+          </div>
+          <div class="field">
+            <label for="f-limit-terna">Ternas disponibles</label>
+            <input type="number" id="f-limit-terna" min="0" value="1" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-limit-linea">Líneas disponibles</label>
+            <input type="number" id="f-limit-linea" min="0" value="1" />
+          </div>
+          <div class="field">
+            <label for="f-limit-bingo">Bingos disponibles</label>
+            <input type="number" id="f-limit-bingo" min="0" value="1" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-date">Fecha y hora del sorteo *</label>
+            <input type="datetime-local" id="f-date" required />
+            <p class="field-error" id="err-date"></p>
+          </div>
+          <div class="field">
+            <label for="f-youtube">Link de YouTube (opcional)</label>
+            <input type="url" id="f-youtube" placeholder="https://youtube.com/watch?v=..." />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-price">Precio por cartón (ARS) *</label>
+            <input type="number" id="f-price" min="1" placeholder="2500" required />
+            <p class="field-error" id="err-price"></p>
+          </div>
+          <div class="field">
+            <label for="f-total">Cantidad total de cartones *</label>
+            <input type="number" id="f-total" min="1" placeholder="300" required />
+            <p class="field-error" id="err-total"></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-logo">URL del logo (opcional)</label>
+          <input type="url" id="f-logo" placeholder="https://..." />
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--paper-dim); margin: 8px 0;" />
+
+        <p style="font-weight:600; font-size:0.92rem; color:#3a361f;">Datos para recibir los pagos</p>
+
+        <div class="field">
+          <label for="f-organizer-name">Nombre del organizador / titular de cuenta *</label>
+          <input type="text" id="f-organizer-name" placeholder="Ej: Cooperativa Escolar San Martín" required />
+          <p class="field-error" id="err-organizer-name"></p>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-alias">Alias *</label>
+            <input type="text" id="f-alias" placeholder="bingo.solidario.sm" required />
+            <p class="field-error" id="err-alias"></p>
+          </div>
+          <div class="field">
+            <label for="f-cbu">CBU *</label>
+            <input type="text" id="f-cbu" inputmode="numeric" placeholder="0000003100012345678901" required />
+            <p class="field-error" id="err-cbu"></p>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="btn-submit" style="margin-top:10px;">
+          Crear bingo
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="../../assets/js/pages/organizador/crear-bingo.page.js"></script>
+</body>
+</html>

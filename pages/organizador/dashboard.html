@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel del organizador - BingoLive</title>
+  <link rel="stylesheet" href="../../assets/css/main.css?v=20260808-master-fix" />
+  <link rel="stylesheet" href="../../assets/css/organizador.css?v=20260808-master-fix" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container org-topbar">
+      <a class="brand" href="dashboard.html">
+        <span class="brand__mark">B</span>
+        <span>BingoLive</span>
+      </a>
+      <div class="org-topbar__user">
+        <span class="org-topbar__avatar" id="user-initial">?</span>
+        <span id="user-name">Cargando...</span>
+        <button class="btn btn-ghost" id="btn-logout">Cerrar sesion</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 32px 24px 80px;">
+    <div class="org-page-head" id="dashboard-head">
+      <div>
+        <h1 id="dashboard-title">Mis bingos</h1>
+        <p id="dashboard-subtitle">Crea un nuevo bingo o entra a uno existente para gestionarlo.</p>
+      </div>
+      <a class="btn btn-primary" href="crear-bingo.html">+ Crear bingo</a>
+    </div>
+
+    <div id="loading-state">
+      <div class="skeleton" style="height: 180px; width: 100%; border-radius: 12px; margin-bottom: 16px;"></div>
+      <div class="skeleton" style="height: 180px; width: 100%; border-radius: 12px;"></div>
+    </div>
+
+    <div id="empty-state" class="paper-card empty-panel" hidden>
+      <h2 style="margin-bottom:8px;">Todavia no creaste ningun bingo</h2>
+      <p style="margin-bottom:20px;">Empeza creando tu primer bingo: tarda menos de dos minutos.</p>
+      <a class="btn btn-primary" href="crear-bingo.html">+ Crear mi primer bingo</a>
+    </div>
+
+    <div id="bingo-grid" class="bingo-grid" hidden></div>
+
+    <section id="platform-panel" class="platform-panel" hidden>
+      <div class="master-shell">
+        <header class="master-top">
+          <div>
+            <span class="master-eyebrow">Control general</span>
+            <h2>Master de plataforma</h2>
+            <p>Supervisa bingos, organizadores, ventas y comisiones desde un solo lugar.</p>
+          </div>
+          <div class="master-top__actions">
+            <a class="btn btn-primary" href="crear-bingo.html">Crear bingo</a>
+            <button type="button" class="btn btn-ghost" id="btn-refresh-platform">Actualizar</button>
+          </div>
+        </header>
+
+        <nav class="master-toolbar" aria-label="Accesos rapidos del master">
+          <button type="button" class="master-toolbar__item" id="btn-scroll-bingos">
+            <span>Bingos</span>
+            <strong>Gestionar salas</strong>
+          </button>
+          <button type="button" class="master-toolbar__item" id="btn-scroll-organizers">
+            <span>Organizadores</span>
+            <strong>Ver actividad</strong>
+          </button>
+          <a class="master-toolbar__item" href="crear-bingo.html">
+            <span>Nuevo bingo</span>
+            <strong>Crear desde master</strong>
+          </a>
+        </nav>
+
+        <section class="master-kpis" aria-label="Resumen de plataforma">
+          <article>
+            <span>Bingos</span>
+            <strong id="platform-bingos">0</strong>
+          </article>
+          <article>
+            <span>Organizadores</span>
+            <strong id="platform-organizers">0</strong>
+          </article>
+          <article>
+            <span>Ventas brutas</span>
+            <strong id="platform-gross">$0</strong>
+          </article>
+          <article>
+            <span>Comisiones</span>
+            <strong id="platform-commissions">$0</strong>
+          </article>
+        </section>
+
+        <section class="master-main" id="master-bingos-section">
+          <div class="master-main__head">
+            <div>
+              <h3>Bingos</h3>
+              <p id="platform-results-count">Busca y gestiona todos los bingos de la plataforma.</p>
+            </div>
+            <div class="platform-filters">
+              <input id="platform-search" type="search" placeholder="Buscar bingo, organizador o ID" />
+              <select id="platform-status-filter">
+                <option value="all">Todos los estados</option>
+                <option value="published">Publicados</option>
+                <option value="live">En vivo</option>
+                <option value="finished">Finalizados</option>
+                <option value="cancelled">Cancelados</option>
+              </select>
+            </div>
+          </div>
+          <div class="master-table-wrap">
+            <table class="data-table master-table">
+              <thead>
+                <tr>
+                  <th>Bingo</th>
+                  <th>Organizador</th>
+                  <th>Estado</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="platform-bingos-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="master-secondary">
+          <div class="master-side-panel" id="master-organizers-section">
+            <div class="master-side-panel__head">
+              <h3>Organizadores</h3>
+              <p>Usuarios que administran o tienen bingos asignados.</p>
+            </div>
+            <div class="master-table-wrap">
+              <table class="data-table master-table">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Email / ID</th>
+                    <th>Bingos</th>
+                    <th>Ventas</th>
+                  </tr>
+                </thead>
+                <tbody id="platform-organizers-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="master-side-panel">
+            <div class="master-side-panel__head">
+              <h3>Ultimas ventas</h3>
+            </div>
+            <div class="master-table-wrap">
+              <table class="data-table master-table">
+                <thead>
+                  <tr>
+                    <th>Bingo</th>
+                    <th>Comprador</th>
+                    <th>Organizador</th>
+                    <th>Bruto</th>
+                    <th>Comision</th>
+                  </tr>
+                </thead>
+                <tbody id="platform-sales-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="../../assets/js/pages/organizador/dashboard.page.js?v=20260808-master-fix"></script>
+</body>
+</html>

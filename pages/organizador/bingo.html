@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestionar bingo — Panel del organizador — BingoLive</title>
+  <link rel="stylesheet" href="../../assets/css/main.css" />
+  <link rel="stylesheet" href="../../assets/css/organizador.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container org-topbar">
+      <a class="brand" href="dashboard.html">
+        <span class="brand__mark">B</span>
+        <span>BingoLive</span>
+      </a>
+      <div class="org-topbar__user">
+        <span class="org-topbar__avatar" id="user-initial">?</span>
+        <span id="user-name">Cargando…</span>
+        <button class="btn btn-ghost" id="btn-logout">Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 32px 24px 100px;">
+
+    <div id="loading-state">
+      <div class="skeleton" style="height: 60px; width: 40%; margin-bottom: 20px; border-radius: 10px;"></div>
+      <div class="skeleton" style="height: 240px; width: 100%; border-radius: 22px;"></div>
+    </div>
+
+    <div id="empty-state" class="paper-card empty-panel" hidden>
+      <h2>No encontramos este bingo</h2>
+      <p>Puede que no exista o que no te pertenezca.</p>
+      <a class="btn btn-primary" href="dashboard.html" style="margin-top:16px;">Volver a Mis bingos</a>
+    </div>
+
+    <div id="bingo-detail" hidden>
+      <div class="org-page-head">
+        <div>
+          <span class="badge badge-soon" id="detail-status">—</span>
+          <h1 id="detail-name" style="margin-top:8px;">—</h1>
+          <p>Compartí este enlace con tus jugadores:</p>
+          <p class="mono" id="detail-share-link" style="color: var(--gold-strong); font-size: 0.85rem; margin-top:4px; word-break: break-all;"></p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-ghost" id="btn-copy-link">Copiar enlace</button>
+          <a class="btn btn-ghost" id="btn-ver-landing" href="#" target="_blank" rel="noopener">Ver landing ↗</a>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="paper-card stat-card">
+          <div class="stat-card__label">Cartones vendidos</div>
+          <div class="stat-card__value" id="stat-sold">0</div>
+        </div>
+        <div class="paper-card stat-card">
+          <div class="stat-card__label">Disponibles</div>
+          <div class="stat-card__value" id="stat-available">0</div>
+        </div>
+        <div class="paper-card stat-card">
+          <div class="stat-card__label">Recaudación</div>
+          <div class="stat-card__value" id="stat-revenue">$0</div>
+        </div>
+        <div class="paper-card stat-card">
+          <div class="stat-card__label">Jugadores</div>
+          <div class="stat-card__value" id="stat-players">0</div>
+        </div>
+      </div>
+
+      <div class="org-tabs">
+        <button class="org-tab is-active" data-tab="sorteo">Sorteo</button>
+        <button class="org-tab" data-tab="comprobantes">Comprobantes <span id="badge-review"></span></button>
+        <button class="org-tab" data-tab="jugadores">Jugadores</button>
+        <button class="org-tab" data-tab="chat">Chat</button>
+        <button class="org-tab" data-tab="logs">Logs</button>
+        <button class="org-tab" data-tab="editar">Editar bingo</button>
+      </div>
+
+      <!-- TAB: SORTEO -->
+      <section class="tab-panel is-active" id="tab-sorteo">
+        <article class="paper-card draw-panel">
+          <div>
+            <div class="draw-ball">
+              <span class="draw-ball__value" id="draw-current-ball">--</span>
+            </div>
+            <p style="text-align:center; margin-top:10px; color:#6b664f; font-size:0.85rem;" id="draw-count-label">0 de 90 bolillas cantadas</p>
+          </div>
+          <div>
+            <h3 style="font-size:1.1rem; margin-bottom:6px;">Control del sorteo</h3>
+            <p style="color:#6b664f; font-size:0.9rem;" id="draw-status-text">El bingo todavía no comenzó.</p>
+
+            <div class="draw-actions">
+              <button class="btn btn-primary" id="btn-start-bingo">Iniciar bingo</button>
+              <button class="btn btn-ghost" id="btn-toggle-announcer">Activar relator</button>
+              <button class="btn btn-ghost" id="btn-toggle-video">Desactivar video</button>
+              <button class="btn btn-ghost" id="btn-reset-draw-state">Limpiar bolillas anteriores</button>
+              <button class="btn btn-primary" id="btn-draw-ball" hidden>Sacar bolilla</button>
+              <input class="manual-ball-input" type="number" id="manual-ball-input" min="1" max="90" placeholder="Bolilla" hidden />
+              <button class="btn btn-primary" id="btn-add-manual-ball" hidden>Cargar manual</button>
+              <button class="btn btn-ghost" id="btn-remove-last-ball">Borrar última bolilla</button>
+              <button class="btn btn-danger" id="btn-finish-bingo" hidden>Finalizar bingo</button>
+            </div>
+
+            <div class="draw-history" id="draw-history"></div>
+          </div>
+        </article>
+
+        <article class="paper-card" style="padding:26px; margin-top:20px;">
+          <h3 style="font-size:1.1rem; margin-bottom:4px;">Declarar ganador</h3>
+          <p style="color:#6b664f; font-size:0.9rem; margin-bottom:14px;">Registrá manualmente a quien cante Terna, Línea o Bingo.</p>
+          <div class="winner-form">
+            <input type="text" id="winner-name" placeholder="Nombre del ganador" />
+            <input type="text" id="winner-dni" placeholder="DNI" inputmode="numeric" />
+            <select id="winner-type">
+              <option value="terna">Terna</option>
+              <option value="linea">Línea</option>
+              <option value="bingo">Bingo</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="btn-declare-winner" style="margin-top:14px;">Registrar ganador</button>
+
+          <div id="winners-summary" style="margin-top:22px;"></div>
+        </article>
+      </section>
+
+      <!-- TAB: COMPROBANTES -->
+      <section class="tab-panel" id="tab-comprobantes">
+        <article class="paper-card" style="padding: 10px 26px 26px;">
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Jugador</th>
+                  <th>DNI</th>
+                  <th>WhatsApp</th>
+                  <th>Cartones</th>
+                  <th>Importe</th>
+                  <th>Comprobante</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="receipts-table-body"></tbody>
+            </table>
+            <p class="empty-panel" id="receipts-empty" hidden>Todavía no hay comprobantes para revisar.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- TAB: JUGADORES -->
+      <section class="tab-panel" id="tab-jugadores">
+        <article class="paper-card" style="padding: 10px 26px 26px;">
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Jugador</th>
+                  <th>DNI</th>
+                  <th>WhatsApp</th>
+                  <th>Cartones</th>
+                  <th>Importe pagado</th>
+                  <th>Fecha de compra</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="players-table-body"></tbody>
+            </table>
+            <p class="empty-panel" id="players-empty" hidden>Todavía no hay jugadores confirmados.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- TAB: CHAT -->
+      <section class="tab-panel" id="tab-chat">
+        <article class="paper-card admin-chat-panel">
+          <div class="admin-chat-panel__head">
+            <div>
+              <h3>Chat y avisos en vivo</h3>
+              <p>Escribí avisos para que aparezcan y se escuchen en las salas con audio activo.</p>
+            </div>
+            <button class="btn btn-ghost btn-small" type="button" id="btn-clear-chat">Limpiar chat</button>
+          </div>
+          <div id="admin-chat-list" class="live-chat-list"></div>
+          <form id="admin-chat-form" class="live-chat-form">
+            <select id="admin-chat-kind" aria-label="Tipo de mensaje">
+              <option value="announcement">Aviso con audio</option>
+              <option value="message">Mensaje normal</option>
+            </select>
+            <input id="admin-chat-input" type="text" maxlength="240" placeholder="Ej: En 3 minutos arrancamos..." autocomplete="off" />
+            <button class="btn btn-primary" type="submit">Enviar aviso</button>
+          </form>
+        </article>
+      </section>
+
+      <!-- TAB: LOGS -->
+      <section class="tab-panel" id="tab-logs">
+        <article class="paper-card audit-panel">
+          <div class="audit-panel__head">
+            <h3>Registro transparente</h3>
+            <p>Acciones del sorteo, pagos, reclamos y cambios relevantes.</p>
+          </div>
+          <div id="audit-log-list" class="audit-log-list"></div>
+        </article>
+      </section>
+
+      <!-- TAB: EDITAR -->
+      <section class="tab-panel" id="tab-editar">
+        <form id="edit-form" class="paper-card" style="padding: 30px;" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="e-name">Nombre del bingo</label>
+              <input type="text" id="e-name" required />
+            </div>
+            <div class="field">
+              <label for="e-description">Descripción</label>
+              <textarea id="e-description"></textarea>
+            </div>
+            <div class="field">
+              <label for="e-prizes">Premios (uno por línea)</label>
+              <textarea id="e-prizes"></textarea>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="e-prize-terna">Premio Terna</label>
+                <input type="text" id="e-prize-terna" />
+              </div>
+              <div class="field">
+                <label for="e-prize-linea">Premio Línea</label>
+                <input type="text" id="e-prize-linea" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="e-prize-bingo">Premio Bingo</label>
+              <input type="text" id="e-prize-bingo" />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="e-limit-terna">Ternas disponibles</label>
+                <input type="number" id="e-limit-terna" min="0" />
+              </div>
+              <div class="field">
+                <label for="e-limit-linea">Líneas disponibles</label>
+                <input type="number" id="e-limit-linea" min="0" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="e-limit-bingo">Bingos disponibles</label>
+              <input type="number" id="e-limit-bingo" min="0" />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="e-date">Fecha y hora del sorteo</label>
+                <input type="datetime-local" id="e-date" required />
+              </div>
+              <div class="field">
+                <label for="e-youtube">Link de YouTube</label>
+                <input type="url" id="e-youtube" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="e-price">Precio por cartón</label>
+                <input type="number" id="e-price" min="1" required />
+              </div>
+              <div class="field">
+                <label for="e-total">Cantidad total de cartones</label>
+                <input type="number" id="e-total" min="1" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="e-logo">URL del logo</label>
+              <input type="url" id="e-logo" />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="e-organizer-name">Nombre del organizador</label>
+                <input type="text" id="e-organizer-name" required />
+              </div>
+              <div class="field">
+                <label for="e-alias">Alias</label>
+                <input type="text" id="e-alias" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="e-cbu">CBU</label>
+              <input type="text" id="e-cbu" inputmode="numeric" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn-save-edit" style="align-self:flex-start;">
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="../../assets/js/pages/organizador/bingo-detalle.page.js"></script>
+</body>
+</html>

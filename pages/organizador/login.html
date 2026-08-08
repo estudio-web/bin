@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ingresar — Panel del organizador — BingoLive</title>
+  <link rel="stylesheet" href="../../assets/css/main.css" />
+  <link rel="stylesheet" href="../../assets/css/organizador.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container site-header__bar">
+      <a class="brand" href="../../index.html">
+        <span class="brand__mark">B</span>
+        <span>BingoLive</span>
+      </a>
+      <a class="btn btn-ghost" href="../../index.html">← Volver al sitio</a>
+    </div>
+  </header>
+
+  <main class="auth-wrap">
+    <article class="paper-card auth-card">
+      <h1 id="auth-title">Ingresá a tu panel</h1>
+      <p class="auth-card__hint" id="auth-hint">Gestioná tus bingos, aprobá pagos y controlá el sorteo en vivo.</p>
+
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab is-active" id="tab-login">Iniciar sesión</button>
+        <button type="button" class="auth-tab" id="tab-register">Crear cuenta</button>
+      </div>
+
+      <form id="auth-form" class="form-grid" novalidate>
+        <div class="field" id="field-name" hidden>
+          <label for="reg-name">Nombre del organizador</label>
+          <input type="text" id="reg-name" placeholder="Ej: Cooperativa Escolar San Martín" />
+          <p class="field-error" id="name-error"></p>
+        </div>
+
+        <div class="field">
+          <label for="auth-email">Email</label>
+          <input type="email" id="auth-email" placeholder="tu@email.com" required />
+          <p class="field-error" id="email-error"></p>
+        </div>
+
+        <div class="field">
+          <label for="auth-password">Contraseña</label>
+          <input type="password" id="auth-password" placeholder="Mínimo 6 caracteres" required />
+          <p class="field-error" id="password-error"></p>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="btn-submit">Iniciar sesión</button>
+      </form>
+    </article>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="../../assets/js/pages/organizador/login.page.js"></script>
+</body>
+</html>
